@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Define the audio interface
+INTERFACE="hw:0"
+
+# Define the sample rate and buffer size
+SAMPLE_RATE=48000
+BUFFER_SIZE=1024
+
+# Number of periods
+PERIODS=3
+
+# Log file location
+LOG_FILE="$HOME/jack_startup.log"
+
+# Function to log messages
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> $LOG_FILE
+}
+
+# Export JACK settings to bypass session bus device reservation
+export JACK_NO_AUDIO_RESERVATION=1
+
+# Start logging
+log_message "Starting JACK setup script."
+
+# Kill any existing jackd processes
+if pgrep -x "jackd" > /dev/null; then
+    log_message "JACK server is already running, killing it..."
+    killall jackd
+    sleep 2
+fi
+
+# Stop PulseAudio temporarily
+if pgrep -x "pulseaudio" > /dev/null; then
+    log_message "Stopping PulseAudio."
+    pulseaudio --kill
+    sleep 2
+fi
+
+# Attempt to free up the sound device
+SOUND_USERS=$(fuser -v /dev/snd/* 2>&1)
+if [ -n "$SOUND_USERS" ]; then
+    log_message "Sound device is in use by: $SOUND_USERS"
+    fuser -k /dev/snd/*
+    log_message "Killed processes using sound device."
+    sleep 2
+fi
+
+# Starting JACK server
+log_message "Attempting to start JACK server..."
+/usr/bin/jackd -dalsa -d$INTERFACE -r$SAMPLE_RATE -p$BUFFER_SIZE -n$PERIODS -P -s &
+sleep 5
+
+# Check if JACK server started successfully
+if pgrep -x "jackd" > /dev/null; then
+    log_message "JACK server started successfully."
+else
+    log_message "Failed to start JACK server. Please check the settings and try again."
+fi
+
+# Re-enable PulseAudio if needed
+pulseaudio --start
+log_message "PulseAudio restarted."
