@@ -1,0 +1,13 @@
+<!DOCTYPE patchbay>
+<patchbay version="0.9.9" name="u">
+ <output-sockets>
+  <socket type="jack-midi" client="system" exclusive="off" name="system 1">
+   <plug>capture_1</plug>
+   <plug>midi_capture_1</plug>
+  </socket>
+ </output-sockets>
+ <input-sockets/>
+ <slots/>
+ <cables/>
+</patchbay>
+
