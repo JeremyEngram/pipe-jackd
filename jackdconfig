@@ -2,38 +2,107 @@
 
 xdg-open https://github.com/jackaudio/jackaudio.github.com/wiki#bridge
 
-# Function to check JACK server status
-check_jack_status() {
-    # Check if JACK server is running
-    if ps aux | grep '[j]ackd' > /dev/null; then
-        echo "JACK server is running."
-    else
-        echo "JACK server is not running."
-        exit 1
-    fi
-}
+sudo chmod 0700 /run/user/1000
 
-# Function to test JACK server connection
-test_jack_connection() {
-    # Test connection to the JACK server
-    if jack_connect -s > /dev/null; then
-        echo "Connection to JACK server successful."
-    else
-        echo "Failed to connect to JACK server."
-        exit 1
-    fi
+aplay -l
+
+options hw:vc4hdmi0 hw:vc4hdmi1 hw:Headphones hw:Device
+
+#!/bin/bash
+
+# Function to set QjackCtl interface
+set_qjackctl_interface() {
+    local interface=$1
+    echo "Setting QjackCtl interface to $interface..."
+    qjackctl --interface $interface &
 }
 
 # Main function
-echo "Checking JACK configuration..."
+echo "Setting QjackCtl interface..."
 
-# Check JACK server status
-check_jack_status
+# Set QjackCtl interface based on options
+case "$1" in
+    "hw:vc4hdmi0" | "hw:vc4hdmi1" | "hw:Headphones" | "hw:Device")
+        set_qjackctl_interface "$1"
+        ;;
+    *)
+        echo "Invalid interface option. Please specify one of the following options:"
+        echo "  hw:vc4hdmi0"
+        echo "  hw:vc4hdmi1"
+        echo "  hw:Headphones"
+        echo "  hw:Device"
+        exit 1
+        ;;
+esac
 
-# Test connection to JACK server
-test_jack_connection
+echo "QjackCtl interface set successfully."
 
-echo "JACK configuration is correct."
+
+
+
+# Function to set QjackCtl MIDI driver
+set_qjackctl_midi_driver() {
+    local driver=$1
+    echo "Setting QjackCtl MIDI driver to $driver..."
+    qjackctl --midi-driver $driver &
+}
+
+# Main function
+echo "Setting QjackCtl MIDI driver..."
+
+# Set QjackCtl MIDI driver based on options
+case "$1" in
+    "raw" | "seq")
+        set_qjackctl_midi_driver "$1"
+        ;;
+    *)
+        echo "Invalid MIDI driver option. Please specify one of the following options:"
+        echo "  raw: Raw MIDI data transfer"
+        echo "  seq: ALSA Sequencer MIDI driver"
+        exit 1
+        ;;
+esac
+
+echo "QjackCtl MIDI driver set successfully."
+
+
+
+#!/bin/bash
+
+# Function to configure QjackCtl patchbay
+configure_patchbay() {
+    local patchbay_file="$1"
+
+    # Check if patchbay file exists
+    if [ ! -f "$patchbay_file" ]; then
+        echo "Error: Patchbay file '$patchbay_file' not found."
+        exit 1
+    fi
+
+    # Start QjackCtl
+    qjackctl &
+
+    # Wait for QjackCtl to start
+    sleep 5
+
+    # Load patchbay configuration
+    jack_load -p "$patchbay_file"
+}
+
+# Main function
+echo "Configuring QjackCtl patchbay..."
+
+# Check if patchbay file argument provided
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <patchbay_file>"
+    exit 1
+fi
+
+# Configure QjackCtl patchbay
+configure_patchbay "$1"
+
+echo "QjackCtl patchbay configured successfully."
+
 
 
 
