@@ -67,6 +67,11 @@ echo "QjackCtl MIDI driver set successfully."
 
 
 
+
+
+
+
+
 #!/bin/bash
 
 # Function to configure QjackCtl patchbay
@@ -102,44 +107,4 @@ fi
 configure_patchbay "$1"
 
 echo "QjackCtl patchbay configured successfully."
-
-
-
-
-
-
-#!/bin/bash
-
-# Function to check JACK server status
-check_jack_status() {
-    # Check if JACK server is running
-    if pgrep -x "jackd" > /dev/null; then
-        echo "JACK server is running."
-    else
-        echo "JACK server is not running."
-        exit 1
-    fi
-}
-
-# Function to check if JACK server is running with real-time priority
-check_realtime_priority() {
-    # Check if JACK server is running with real-time priority
-    if pgrep -x "jackd" > /dev/null && jack_lsp | grep -q 'JackDriver::Realtime'; then
-        echo "JACK server is running with real-time priority."
-    else
-        echo "JACK server is not running with real-time priority."
-        exit 1
-    fi
-}
-
-# Main function
-echo "Checking JACK configuration..."
-
-# Check JACK server status
-check_jack_status
-
-# Check if JACK server is running with real-time priority
-check_realtime_priority
-
-echo "JACK configuration is correct."
 
