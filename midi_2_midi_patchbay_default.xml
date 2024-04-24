@@ -1,0 +1,18 @@
+<!DOCTYPE patchbay>
+<patchbay name="midi_2_midi_patchbay_default" version="0.9.9">
+ <output-sockets>
+  <socket name="Midi\ Through 1" client="Midi\ Through" type="alsa-midi" exclusive="off">
+   <plug>Midi\ Through\ Port\-0</plug>
+  </socket>
+ </output-sockets>
+ <input-sockets>
+  <socket name="Midi\ Through 1" client="Midi\ Through" type="alsa-midi" exclusive="off">
+   <plug>Midi\ Through\ Port\-0</plug>
+  </socket>
+ </input-sockets>
+ <slots/>
+ <cables>
+  <cable type="alsa-midi" output="Midi\ Through 1" input="Midi\ Through 1"/>
+ </cables>
+</patchbay>
+
