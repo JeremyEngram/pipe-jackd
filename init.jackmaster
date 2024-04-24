@@ -1,0 +1,9 @@
+JackMaster
+
+Installation:
+Just a simple
+./autogen.sh (only if you have the "developer-version")
+./configure
+$EDITOR config.h
+make
+make install (as root, if you can't write in /usr/local)

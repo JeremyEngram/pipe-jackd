@@ -1,0 +1,7 @@
+git clone https://github.com/falkTX/nooice.git joystick_jack
+
+cd joystick_jack
+
+make
+
+sudo make install 
