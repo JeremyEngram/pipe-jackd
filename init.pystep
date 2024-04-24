@@ -1,0 +1,5 @@
+git clone https://github.com/riban-bw/PyStep.git
+
+python3 -m pystep
+source pystep/bin/activate
+pip install jack
