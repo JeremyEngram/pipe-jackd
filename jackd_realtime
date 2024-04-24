@@ -1,3 +1,28 @@
+#!/bin/bash
+
+# Check if JACK is already running
+if ! ps aux | grep -q '[j]ackd'; then
+    echo "Starting JACK audio server..."
+    jackd -R -d alsa -r 44100 -p 128 -n 2 &   # Adjust parameters as needed
+    sleep 2  # Wait for JACK to start
+fi
+
+# Check if JACK is running
+if ! ps aux | grep -q '[j]ackd'; then
+    echo "Failed to start JACK audio server. Exiting."
+    exit 1
+fi
+
+# Start a JACK client (e.g., qjackctl)
+echo "Starting JACK client..."
+qjackctl &  # Adjust with your preferred JACK client
+
+echo "Real-time audio setup complete."
+
+
+echo
+echo Checking...
+echo
 
 
 #!/bin/bash
