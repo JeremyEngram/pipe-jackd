@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Function to install QjackCtl on Linux
+install_qjackctl_linux() {
+    echo "Installing QjackCtl..."
+    sudo apt-get update
+    sudo apt-get install -y qjackctl
+    echo "QjackCtl installed successfully."
+}
+
+# Function to install JACK for Windows
+install_jack_windows() {
+    echo "Downloading and installing JACK for Windows..."
+    # Replace the URL with the latest download link for JACK for Windows
+    wget https://jackaudio.org/downloads/jack2-releases/jack2-release-windows-installer.exe
+    # Replace the installer name with the actual name if it's different
+    wine jack2-release-windows-installer.exe
+    echo "JACK for Windows installed successfully."
+}
+
+# Function to start QjackCtl on Linux
+start_qjackctl_linux() {
+    echo "Starting QjackCtl..."
+    qjackctl &
+}
+
+# Function to start JACK Router on Windows
+start_jack_router_windows() {
+    echo "Starting JACK Router..."
+    # Replace the actual command to start JACK Router if needed
+    wine start jack_router.exe
+}
+
+# Main function
+echo "Setting up JACK for network audio streaming..."
+
+# Install QjackCtl on Linux
+install_qjackctl_linux
+
+# Install JACK for Windows
+install_jack_windows
+
+# Start QjackCtl on Linux
+start_qjackctl_linux
+
+# Start JACK Router on Windows
+start_jack_router_windows
+
+echo "JACK setup complete."

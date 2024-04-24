@@ -1,0 +1,76 @@
+#!/bin/bash
+
+xdg-open https://github.com/jackaudio/jackaudio.github.com/wiki#bridge
+
+# Function to check JACK server status
+check_jack_status() {
+    # Check if JACK server is running
+    if ps aux | grep '[j]ackd' > /dev/null; then
+        echo "JACK server is running."
+    else
+        echo "JACK server is not running."
+        exit 1
+    fi
+}
+
+# Function to test JACK server connection
+test_jack_connection() {
+    # Test connection to the JACK server
+    if jack_connect -s > /dev/null; then
+        echo "Connection to JACK server successful."
+    else
+        echo "Failed to connect to JACK server."
+        exit 1
+    fi
+}
+
+# Main function
+echo "Checking JACK configuration..."
+
+# Check JACK server status
+check_jack_status
+
+# Test connection to JACK server
+test_jack_connection
+
+echo "JACK configuration is correct."
+
+
+
+
+
+#!/bin/bash
+
+# Function to check JACK server status
+check_jack_status() {
+    # Check if JACK server is running
+    if pgrep -x "jackd" > /dev/null; then
+        echo "JACK server is running."
+    else
+        echo "JACK server is not running."
+        exit 1
+    fi
+}
+
+# Function to check if JACK server is running with real-time priority
+check_realtime_priority() {
+    # Check if JACK server is running with real-time priority
+    if pgrep -x "jackd" > /dev/null && jack_lsp | grep -q 'JackDriver::Realtime'; then
+        echo "JACK server is running with real-time priority."
+    else
+        echo "JACK server is not running with real-time priority."
+        exit 1
+    fi
+}
+
+# Main function
+echo "Checking JACK configuration..."
+
+# Check JACK server status
+check_jack_status
+
+# Check if JACK server is running with real-time priority
+check_realtime_priority
+
+echo "JACK configuration is correct."
+

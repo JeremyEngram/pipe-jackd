@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Function to install required packages
+install_packages() {
+    echo "Installing required packages..."
+    sudo apt-get update
+    sudo apt-get install -y qjackctl jackd2 netjack
+    echo "Packages installed successfully."
+}
+
+# Function to start JACK with NetJack
+start_jack_with_netjack() {
+    # Start QjackCtl
+    qjackctl &
+
+    # Wait for QjackCtl to start
+    sleep 5
+
+    # Configure NetJack options
+    netjack -u username -p password -C 192.168.1.10
+}
+
+# Main function
+echo "Setting up JACK with NetJack for local network audio streaming..."
+
+# Check if packages are installed
+if ! command -v qjackctl &> /dev/null || ! command -v netjack &> /dev/null; then
+    install_packages
+fi
+
+start_jack_with_netjack
+
+echo "JACK setup complete. You can now use QjackCtl for network audio streaming."
